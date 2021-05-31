@@ -65,15 +65,15 @@ function NeoPixelsControl () {
 function CheckpointCheck () {
     if (pins.digitalReadPin(DigitalPin.P1) == 1) {
         Check = 1
-        if (pins.digitalReadPin(DigitalPin.P2) == 1) {
-            Check = 2
-            if (pins.digitalReadPin(DigitalPin.P3) == 1) {
-                Check = 3
-                if (pins.digitalReadPin(DigitalPin.P4) == 1) {
-                    Check = 4
-                }
-            }
-        }
+    }
+    if (pins.digitalReadPin(DigitalPin.P2) == 1 && Check == 1) {
+        Check = 2
+    }
+    if (pins.digitalReadPin(DigitalPin.P2) == 1 && Check == 2) {
+        Check = 3
+    }
+    if (pins.digitalReadPin(DigitalPin.P2) == 1 && Check == 3) {
+        Check = 4
     }
 }
 let Sekvens = 0
