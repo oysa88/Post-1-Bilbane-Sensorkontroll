@@ -16,12 +16,15 @@ function RiktigLøsning () {
             basic.pause(5)
         }
     }
-    radio.sendString("R")
+    radio.sendString("T")
     basic.pause(2000)
     Restart()
 }
 function Restart () {
-    Check = 0
+    CheckTest = 0
+    Check1 = false
+    Check2 = false
+    Check3 = false
     strip.showColor(neopixel.colors(NeoPixelColors.Yellow))
 }
 function FeilLøsning () {
@@ -46,39 +49,44 @@ function FeilLøsning () {
     Restart()
 }
 radio.onReceivedString(function (receivedString) {
-    if (receivedString == "Start") {
-        Sekvens = input.runningTime()
+    if (receivedString == "Feilet") {
+        FeilLøsning()
     }
 })
 function NeoPixelsControl () {
-    if (Check == 1) {
+    if (CheckTest == 1) {
         Steg1.showColor(neopixel.colors(NeoPixelColors.Green))
-    } else if (Check == 2) {
+    } else if (CheckTest == 2) {
         Steg2.showColor(neopixel.colors(NeoPixelColors.Green))
-    } else if (Check == 3) {
+    } else if (CheckTest == 3) {
         Steg3.showColor(neopixel.colors(NeoPixelColors.Green))
-    } else if (Check == 4) {
+    } else if (CheckTest == 4) {
         Mål.showColor(neopixel.colors(NeoPixelColors.Green))
         RiktigLøsning()
     }
 }
 function CheckpointCheck () {
-    if (pins.digitalReadPin(DigitalPin.P1) == 1) {
-        Check = 1
+    if (pins.digitalReadPin(DigitalPin.P1) == 1 && !(Check1)) {
+        Check1 = true
+        CheckTest += 1
     }
-    if (pins.digitalReadPin(DigitalPin.P2) == 1 && Check == 1) {
-        Check = 2
+    if (pins.digitalReadPin(DigitalPin.P2) == 1 && !(Check2)) {
+        Check2 = true
+        CheckTest += 1
     }
-    if (pins.digitalReadPin(DigitalPin.P2) == 1 && Check == 2) {
-        Check = 3
+    if (pins.digitalReadPin(DigitalPin.P3) == 1 && !(Check3)) {
+        Check3 = true
+        CheckTest += 1
     }
-    if (pins.digitalReadPin(DigitalPin.P2) == 1 && Check == 3) {
-        Check = 4
+    if (pins.digitalReadPin(DigitalPin.P4) == 1 && CheckTest == 3) {
+        CheckTest = 4
     }
 }
-let Sekvens = 0
+let Check3 = false
+let Check2 = false
+let Check1 = false
+let CheckTest = 0
 let Lysstyrke = 0
-let Check = 0
 let Mål: neopixel.Strip = null
 let Steg3: neopixel.Strip = null
 let Steg2: neopixel.Strip = null
@@ -90,19 +98,9 @@ Steg2 = strip.range(0, 8)
 Steg3 = strip.range(0, 12)
 Mål = strip.range(0, 16)
 radio.setGroup(1)
-Check = 0
-let Sekvenslengde = 30000
 Restart()
 basic.forever(function () {
     CheckpointCheck()
     NeoPixelsControl()
     basic.pause(100)
-})
-control.inBackground(function () {
-    while (true) {
-        if (input.runningTime() - Sekvens == Sekvenslengde) {
-            radio.sendString("Feilet")
-            FeilLøsning()
-        }
-    }
 })
