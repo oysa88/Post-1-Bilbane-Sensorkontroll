@@ -1,6 +1,7 @@
 function RiktigLøsning () {
+    soundExpression.giggle.play()
     Lysstyrke = 255
-    for (let index = 0; index < 3; index++) {
+    for (let index = 0; index < 4; index++) {
         for (let index = 0; index < 20; index++) {
             Lysstyrke += -12
             strip.showColor(neopixel.colors(NeoPixelColors.Green))
@@ -17,9 +18,14 @@ function RiktigLøsning () {
         }
     }
     radio.sendString("T")
-    basic.pause(2000)
+    basic.pause(2500)
     Restart()
 }
+radio.onReceivedNumber(function (receivedNumber) {
+    if (receivedNumber == 11) {
+        FeilLøsning()
+    }
+})
 function Restart () {
     CheckTest = 0
     Check1 = false
@@ -28,6 +34,7 @@ function Restart () {
     strip.showColor(neopixel.colors(NeoPixelColors.Yellow))
 }
 function FeilLøsning () {
+    soundExpression.sad.play()
     Lysstyrke = 255
     for (let index = 0; index < 3; index++) {
         for (let index = 0; index < 20; index++) {
@@ -48,11 +55,6 @@ function FeilLøsning () {
     basic.pause(2000)
     Restart()
 }
-radio.onReceivedString(function (receivedString) {
-    if (receivedString == "Feilet") {
-        FeilLøsning()
-    }
-})
 function NeoPixelsControl () {
     if (CheckTest == 1) {
         Steg1.showColor(neopixel.colors(NeoPixelColors.Green))
@@ -62,6 +64,7 @@ function NeoPixelsControl () {
         Steg3.showColor(neopixel.colors(NeoPixelColors.Green))
     } else if (CheckTest == 4) {
         Mål.showColor(neopixel.colors(NeoPixelColors.Green))
+        radio.sendNumber(10)
         RiktigLøsning()
     }
 }
