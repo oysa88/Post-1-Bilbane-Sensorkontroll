@@ -1,5 +1,4 @@
 function RiktigLøsning () {
-    soundExpression.giggle.play()
     Lysstyrke = 255
     for (let index = 0; index < 4; index++) {
         for (let index = 0; index < 20; index++) {
@@ -34,7 +33,6 @@ function Restart () {
     strip.showColor(neopixel.colors(NeoPixelColors.Yellow))
 }
 function FeilLøsning () {
-    soundExpression.sad.play()
     Lysstyrke = 255
     for (let index = 0; index < 3; index++) {
         for (let index = 0; index < 20; index++) {
