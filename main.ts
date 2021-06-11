@@ -1,4 +1,5 @@
 function RiktigLøsning () {
+    soundExpression.giggle.play()
     Lysstyrke = 255
     for (let index = 0; index < 4; index++) {
         for (let index = 0; index < 20; index++) {
@@ -16,28 +17,14 @@ function RiktigLøsning () {
             basic.pause(5)
         }
     }
-    radio.sendString("T")
+    strip.showColor(neopixel.colors(NeoPixelColors.Green))
     basic.pause(2500)
-    Restart()
-}
-radio.onReceivedNumber(function (receivedNumber) {
-    if (receivedNumber == 11) {
-        FeilLøsning()
-    }
-})
-input.onButtonPressed(Button.A, function () {
-    soundExpression.sad.playUntilDone()
-})
-function Restart () {
     CheckTest = 0
-    Check1 = false
-    Check2 = false
-    Check3 = false
-    strip.showColor(neopixel.colors(NeoPixelColors.Yellow))
 }
 function FeilLøsning () {
+    soundExpression.sad.play()
     Lysstyrke = 255
-    for (let index = 0; index < 3; index++) {
+    for (let index = 0; index < 4; index++) {
         for (let index = 0; index < 20; index++) {
             Lysstyrke += -12
             strip.showColor(neopixel.colors(NeoPixelColors.Red))
@@ -53,11 +40,19 @@ function FeilLøsning () {
             basic.pause(5)
         }
     }
-    basic.pause(2000)
-    Restart()
+    strip.showColor(neopixel.colors(NeoPixelColors.Red))
+    basic.pause(2500)
+    CheckTest = 0
 }
+radio.onReceivedString(function (receivedString) {
+    if (receivedString == "Feil") {
+        FeilLøsning()
+    }
+})
 function NeoPixelsControl () {
-    if (CheckTest == 1) {
+    if (CheckTest == 0) {
+        strip.showColor(neopixel.colors(NeoPixelColors.Yellow))
+    } else if (CheckTest == 1) {
         Steg1.showColor(neopixel.colors(NeoPixelColors.Green))
     } else if (CheckTest == 2) {
         Steg2.showColor(neopixel.colors(NeoPixelColors.Green))
@@ -65,44 +60,43 @@ function NeoPixelsControl () {
         Steg3.showColor(neopixel.colors(NeoPixelColors.Green))
     } else if (CheckTest == 4) {
         Mål.showColor(neopixel.colors(NeoPixelColors.Green))
-        radio.sendNumber(10)
+        radio.sendString("T")
         RiktigLøsning()
     }
 }
 function CheckpointCheck () {
-    if (pins.digitalReadPin(DigitalPin.P1) == 1 && !(Check1)) {
-        Check1 = true
-        CheckTest += 1
+    if (pins.digitalReadPin(DigitalPin.P1) == 1 && CheckTest == 0) {
+        CheckTest = 1
+        music.playTone(262, music.beat(BeatFraction.Whole))
     }
-    if (pins.digitalReadPin(DigitalPin.P2) == 1 && !(Check2)) {
-        Check2 = true
-        CheckTest += 1
+    if (pins.digitalReadPin(DigitalPin.P2) == 1 && CheckTest == 1) {
+        CheckTest = 2
+        music.playTone(294, music.beat(BeatFraction.Whole))
     }
-    if (pins.digitalReadPin(DigitalPin.P8) == 1 && !(Check3)) {
-        Check3 = true
-        CheckTest += 1
+    if (pins.digitalReadPin(DigitalPin.P8) == 1 && CheckTest == 2) {
+        CheckTest = 3
+        music.playTone(330, music.beat(BeatFraction.Whole))
     }
     if (pins.digitalReadPin(DigitalPin.P16) == 1 && CheckTest == 3) {
         CheckTest = 4
+        music.playTone(349, music.beat(BeatFraction.Whole))
     }
 }
-let Check3 = false
-let Check2 = false
-let Check1 = false
-let CheckTest = 0
 let Lysstyrke = 0
+let CheckTest = 0
 let Mål: neopixel.Strip = null
 let Steg3: neopixel.Strip = null
 let Steg2: neopixel.Strip = null
 let Steg1: neopixel.Strip = null
 let strip: neopixel.Strip = null
 strip = neopixel.create(DigitalPin.P0, 24, NeoPixelMode.RGB)
+strip.showColor(neopixel.colors(NeoPixelColors.Yellow))
 Steg1 = strip.range(0, 6)
 Steg2 = strip.range(0, 12)
 Steg3 = strip.range(0, 18)
 Mål = strip.range(0, 24)
+CheckTest = 0
 radio.setGroup(1)
-Restart()
 basic.forever(function () {
     CheckpointCheck()
     NeoPixelsControl()
