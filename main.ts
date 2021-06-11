@@ -25,6 +25,9 @@ radio.onReceivedNumber(function (receivedNumber) {
         FeilLøsning()
     }
 })
+input.onButtonPressed(Button.A, function () {
+    soundExpression.sad.playUntilDone()
+})
 function Restart () {
     CheckTest = 0
     Check1 = false
@@ -75,11 +78,11 @@ function CheckpointCheck () {
         Check2 = true
         CheckTest += 1
     }
-    if (pins.digitalReadPin(DigitalPin.P3) == 1 && !(Check3)) {
+    if (pins.digitalReadPin(DigitalPin.P8) == 1 && !(Check3)) {
         Check3 = true
         CheckTest += 1
     }
-    if (pins.digitalReadPin(DigitalPin.P4) == 1 && CheckTest == 3) {
+    if (pins.digitalReadPin(DigitalPin.P16) == 1 && CheckTest == 3) {
         CheckTest = 4
     }
 }
@@ -93,11 +96,11 @@ let Steg3: neopixel.Strip = null
 let Steg2: neopixel.Strip = null
 let Steg1: neopixel.Strip = null
 let strip: neopixel.Strip = null
-strip = neopixel.create(DigitalPin.P0, 16, NeoPixelMode.RGB)
-Steg1 = strip.range(0, 4)
-Steg2 = strip.range(0, 8)
-Steg3 = strip.range(0, 12)
-Mål = strip.range(0, 16)
+strip = neopixel.create(DigitalPin.P0, 24, NeoPixelMode.RGB)
+Steg1 = strip.range(0, 6)
+Steg2 = strip.range(0, 12)
+Steg3 = strip.range(0, 18)
+Mål = strip.range(0, 24)
 radio.setGroup(1)
 Restart()
 basic.forever(function () {
