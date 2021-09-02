@@ -61,6 +61,7 @@ function NeoPixelsControl () {
     } else if (CheckTest == 4) {
         Mål.showColor(neopixel.colors(NeoPixelColors.Green))
         radio.sendString("T")
+        radio.sendNumber(10)
         RiktigLøsning()
     }
 }
@@ -71,15 +72,15 @@ function CheckpointCheck () {
     }
     if (pins.digitalReadPin(DigitalPin.P2) == 1 && CheckTest == 1) {
         CheckTest = 2
-        music.playTone(294, music.beat(BeatFraction.Whole))
+        music.playTone(262, music.beat(BeatFraction.Whole))
     }
     if (pins.digitalReadPin(DigitalPin.P8) == 1 && CheckTest == 2) {
         CheckTest = 3
-        music.playTone(330, music.beat(BeatFraction.Whole))
+        music.playTone(262, music.beat(BeatFraction.Whole))
     }
     if (pins.digitalReadPin(DigitalPin.P16) == 1 && CheckTest == 3) {
         CheckTest = 4
-        music.playTone(349, music.beat(BeatFraction.Whole))
+        music.playTone(262, music.beat(BeatFraction.Whole))
     }
 }
 let Lysstyrke = 0
@@ -97,6 +98,7 @@ Steg3 = strip.range(0, 18)
 Mål = strip.range(0, 24)
 CheckTest = 0
 radio.setGroup(1)
+basic.showNumber(1)
 basic.forever(function () {
     CheckpointCheck()
     NeoPixelsControl()
