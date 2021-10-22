@@ -60,7 +60,7 @@ function NeoPixelsControl () {
         Steg3.showColor(neopixel.colors(NeoPixelColors.Green))
     } else if (CheckTest == 4) {
         Mål.showColor(neopixel.colors(NeoPixelColors.Green))
-        radio.sendString("T")
+        radio.sendString("M")
         radio.sendNumber(10)
         RiktigLøsning()
     }
